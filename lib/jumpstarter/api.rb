@@ -1,67 +1,72 @@
 require "jumpstarter/api/version"
-require "jumpstarter/crypto"
+require "jumpstarter/auth"
 require 'json'
 
 module Jumpstarter
   module Api
-    attr_reader :env
-    # Creates new environment based on env /app/env.json
-    def initialize
-      filename = ENV['RUBY_ENV'] == 'test' ? '../../spec/test_env.json' : '/app/env.json'
-
-      raise IOError, 'env.json not found!' unless File.file?(filename)
-
-      file = File.read(filename)
-      @env = JSON.parse(file)
-    end
-
-    def ident
-      self.env.ident
-    end
-
-    def user
-      self.env.ident.user
-    end
-
-    def container
-      self.env.ident.container
-    end
-
-    def app
-      self.env.ident.app
-    end
-
-    def core_settings
-      self.env.settings.core
-    end
-
-    def app_settings
-      self.env.settings.app
-    end
-
-    def find(path)
-      keys = path.split('.')
-
-      if keys.length == 0
-        return nil
-      end
-
-      obj = self.env
-      for i in 0...keys.size do
-        if obj.key?(keys[i])
-          obj = obj[keys[i]]
+    class JumpstarterEnv
+      attr_accessor :env
+      # Creates new environment based on env /app/env.json
+      def initialize(env = false)
+        if env
+          @env = env
         else
-          return nil
+          filename = '/app/env.json'
+          raise IOError, 'No env given & env.json not found!' unless File.file?(filename)
+          file = File.read(filename)
+          @env = JSON.parse(file)
         end
       end
 
-      obj
-    end
+      # Environment getter
 
-    def validate_session(token)
-      # TODO: validate user
-      # TODO: build crypto functions from node.js implemenation
-      true
+      def ident
+        self.env['ident']
+      end
+
+      def user
+        self.env['ident']['user']
+      end
+
+      def container
+        self.env['ident']['container']
+      end
+
+      def app
+        self.env['ident']['app']
+      end
+
+      def core_settings
+        self.env['settings']['core']
+      end
+
+      def app_settings
+        self.env['settings']['app']
+      end
+
+      # Find by dot-notation: e.g. ident.user.email
+      def find(path)
+        keys = path.split('.')
+
+        if keys.length == 0
+          return nil
+        end
+
+        obj = self.env
+        for i in 0...keys.size do
+          if obj.key?(keys[i])
+            obj = obj[keys[i]]
+          else
+            return nil
+          end
+        end
+
+        obj
+      end
+
+      def validate_session(token)
+        Jumpstarter::Api::Auth::validate_session(self, token)
+      end
     end
   end
 end

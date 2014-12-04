@@ -1,0 +1,25 @@
+{
+  "ident": {
+    "user": {
+      "email": "jenny@example.org",
+      "name": "Jenny Doe"
+    },
+    "container": {
+      "id": "rssfdr",
+      "session_key": "baadf00d123abc1234",
+      "trial": false
+    },
+    "app": {
+      "id": "fddzzz"
+    }
+  },
+  "settings": {
+    "core": {
+      "auto-domain": "rss.onjumpstarter.io",
+      "user-domains": ["rss.example.org"],
+      "internet-access": true
+    },
+    "assembly": {"feedtitle": "Cookie Recepies"},
+    "app": {"panellabel": "Cookie Sources"}
+  }
+}

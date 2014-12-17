@@ -2,7 +2,7 @@
 
 [Jumpstarter](http://jumpstarter.io) is the AppStore for the web.
 
-This is the basic implementation of their current 'magic sing-in button' in Ruby.
+This is the basic implementation of their current 'magic sign-in button' in Ruby.
 
 Please note, that Ruby isn't supported yet by Jumpstarter, so apps written in Ruby will be rejected currently.
 It's intended as a little push in the direction of supporting Ruby natively. If so, this project might help.
